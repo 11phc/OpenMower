@@ -30,7 +30,7 @@
 #define IMU_CYCLETIME 20              // cycletime for refresh IMU data
 #define STATUS_CYCLETIME 100          // cycletime for refresh analog and digital Statusvalues
 #define UI_GET_VERSION_CYCLETIME 5000 // cycletime for UI Get_Version request (UI available check)
-#define UI_GET_VERSION_TIMEOUT 100    // timeout for UI Get_Version response (UI available check)
+#define UI_GET_VERSION_TIMEOUT 200    // timeout for UI Get_Version response (UI available check)
 
 #define TILT_EMERGENCY_MILLIS 2500  // Time for a single wheel to be lifted in order to count as emergency (0 disable). This is to filter uneven ground.
 #define LIFT_EMERGENCY_MILLIS 100  // Time for both wheels to be lifted in order to count as emergency (0 disable). This is to filter uneven ground.
@@ -148,10 +148,10 @@ void updateEmergency() {
     uint8_t last_emergency = status_message.emergency_bitmask & LL_EMERGENCY_BIT_LATCH;
 
     // Read & assign emergencies in the same manner as in ll_status.emergency_bitmask
-    uint8_t emergency_read = !gpio_get(PIN_EMERGENCY_3) << 1 | // Stop1
-                             !gpio_get(PIN_EMERGENCY_4) << 2 | // Stop2
-                             !gpio_get(PIN_EMERGENCY_1) << 3 | // Lift1
-                             !gpio_get(PIN_EMERGENCY_2) << 4 | // Lift2
+    uint8_t emergency_read = gpio_get(PIN_EMERGENCY_3) << 1 | // Stop1
+                             gpio_get(PIN_EMERGENCY_4) << 2 | // Stop2
+                             gpio_get(PIN_EMERGENCY_1) << 3 | // Lift1
+                             gpio_get(PIN_EMERGENCY_2) << 4 | // Lift2
                              stock_ui_emergency_state; // OR with StockUI emergency
     uint8_t emergency_state = 0;
 
