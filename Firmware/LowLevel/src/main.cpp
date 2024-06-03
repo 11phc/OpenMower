@@ -172,8 +172,14 @@ void updateEmergency() {
     }
 
     // Handle lifted (both wheels are lifted)
-    if ((emergency_read & LL_EMERGENCY_BITS_LIFT) == LL_EMERGENCY_BITS_LIFT) {
-        // If we just lifted, store the timestamp
+    // Calculate the number of lift emergency bits set
+    int8_t bitsSetCount = 0; 
+    for(int i = 0; i < 8; i++){
+        bitsSetCount += ((emergency_read & LL_EMERGENCY_BITS_LIFT) >> i) & 0x01;
+    }
+
+    if (bitsSetCount > 1) {
+        // If we just lifted (more than one wheel), store the timestamp
         if (lift_emergency_started == 0) {
             lift_emergency_started = millis();
         }
